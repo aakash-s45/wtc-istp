@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "190656995753",
+    "project_id": "wtcistp",
+    "storage_bucket": "wtcistp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190656995753:android:0c8bfd4658e7a6a0ba64b8",
+        "android_client_info": {
+          "package_name": "com.example.wtc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "190656995753-st86m5fbi6coqkkrbaaas976lc9epd0a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwX2oNd4nVgC-g9SZ3iVjbEpEyqUy7eAg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "190656995753-st86m5fbi6coqkkrbaaas976lc9epd0a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "190656995753-k8dj3tkig8uan0ii21p7vlmmqanvm81d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.wtc"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
