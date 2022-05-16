@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:wtc/ui/workertile.dart';
 
 class HomeScreen extends StatelessWidget {
   User? user;
@@ -14,7 +15,16 @@ class HomeScreen extends StatelessWidget {
               await FirebaseAuth.instance.signOut();
             }),
         body: Center(
-          child: Text("this is homescrren guys"),
+          child: WorkerTile(
+            src: const {
+              "name": "Haldiram",
+              "phone": "01125532553",
+              "skill": "bohot tagdi",
+              "exp": "Bohot jyada",
+              "dob": "1995-11-30",
+            },
+          ),
+          // child: Text("this is homescrren guys"),
         ));
   }
 }

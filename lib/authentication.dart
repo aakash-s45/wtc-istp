@@ -1,8 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:wtc/dbcontent.dart';
 import 'package:wtc/ui/home.dart';
 
-Future<bool> loginWithPhone(BuildContext context, String phone) async {
+Future<void> loginWithPhone(
+    {required BuildContext context,
+    required String phone,
+    String? name,
+    String? dob,
+    String? usertype}) async {
   TextEditingController otpCtrller = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -11,14 +17,31 @@ Future<bool> loginWithPhone(BuildContext context, String phone) async {
     codeAutoRetrievalTimeout: (txt) {},
     verificationCompleted: (PhoneAuthCredential credential) async {
       var result = await auth.signInWithCredential(credential);
-      // FirebaseAuth.instance.currentUser
       User? user = result.user;
       if (user != null) {
-        Navigator.push(
+        if (name != null && dob != null && usertype != null) {
+          if (usertype == "Worker") {
+            await addWorker(
+                userid: user.uid,
+                name: name,
+                phone: phone,
+                address: "",
+                dob: dob);
+          } else {
+            await addContractor(
+                userid: user.uid,
+                name: name,
+                phone: phone,
+                address: "",
+                dob: dob);
+          }
+        }
+        Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
               builder: (context) => HomeScreen(user: user),
-            ));
+            ),
+            (Route<dynamic> route) => false);
       }
     },
     verificationFailed: (exception) {
@@ -47,11 +70,30 @@ Future<bool> loginWithPhone(BuildContext context, String phone) async {
                     var result = await auth.signInWithCredential(credential);
                     User? user = result.user;
                     if (user != null) {
-                      Navigator.push(
+                      if (name != null && dob != null && usertype != null) {
+                        if (usertype == "Worker") {
+                          await addWorker(
+                              userid: user.uid,
+                              name: name,
+                              phone: phone,
+                              address: "",
+                              dob: dob);
+                        } else {
+                          await addContractor(
+                              userid: user.uid,
+                              name: name,
+                              phone: phone,
+                              address: "",
+                              dob: dob);
+                        }
+                      }
+
+                      Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
                             builder: (context) => HomeScreen(user: user),
-                          ));
+                          ),
+                          (Route<dynamic> route) => false);
                     } else {
                       print("error");
                     }
@@ -64,5 +106,5 @@ Future<bool> loginWithPhone(BuildContext context, String phone) async {
       // await auth.signInWithCredential();
     },
   );
-  return false;
+  // return false;
 }

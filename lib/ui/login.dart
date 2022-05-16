@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wtc/authentication.dart';
+import 'package:wtc/dbcontent.dart';
 import 'package:wtc/main.dart';
 import 'package:wtc/ui/register.dart';
 
@@ -13,7 +14,7 @@ class Login extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        title: const Text("Login"),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
@@ -42,7 +43,17 @@ class Login extends ConsumerWidget {
                   Center(
                     child: ElevatedButton(
                       onPressed: () async {
-                        await loginWithPhone(context, numController.text);
+                        String number = numController.text;
+                        number = "+91" + number;
+                        await doesNameAlreadyExist(number).then(((value) async {
+                          if (value == true) {
+                            return await loginWithPhone(
+                                context: context, phone: number);
+                          } else {
+                            print("Moj kr");
+                            // return SnackBar(content: Text("Moj kr"));
+                          }
+                        }));
                       },
                       child: Text("Continue"),
                       //   style: ButtonStyle(
