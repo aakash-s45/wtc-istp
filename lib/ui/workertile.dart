@@ -4,6 +4,7 @@ import 'package:wtc/dbcontent.dart';
 
 class WorkerTile extends ConsumerWidget {
   var src;
+  List hello = [];
   WorkerTile({Key? key, required this.src}) : super(key: key);
 
   @override
@@ -46,28 +47,46 @@ class WorkerTile extends ConsumerWidget {
                   child: Row(
                     children: [
                       Flexible(
+                          flex: 1,
+                          fit: FlexFit.tight,
                           child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Age : $age",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                          const Text(
-                            "Distance : 20",
-                            // "Distance : ${src["exp"]}",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                          Text(
-                            "Exp : ${src["exp"]}",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ],
-                      )),
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Age : $age",
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              const Text(
+                                "Distance : 20",
+                                // "Distance : ${src["exp"]}",
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              Text(
+                                "Exp : ${src["exp"]}",
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ],
+                          )),
                       Flexible(
+                          flex: 1,
+                          fit: FlexFit.tight,
                           child: Column(
-                        children: [],
-                      )),
+                            children: [
+                              const Text(
+                                "Skills",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              ...src['skill']
+                                  .map(
+                                    (val) => Text(
+                                      val,
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  )
+                                  .toList(),
+                            ],
+                          )),
                     ],
                   ),
                 ),
