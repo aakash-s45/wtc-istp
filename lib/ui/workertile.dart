@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:wtc/dbcontent.dart';
+import 'package:wtc/provider.dart';
 
 class WorkerTile extends ConsumerWidget {
   var src;
-  List hello = [];
   WorkerTile({Key? key, required this.src}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ref) {
     int age = isAdult(src["dob"]);
+    Map tempworkerloc = src['address'];
+    Position contPos = ref.read(currentPositionProvider);
+    double workerDistance = calculateDistance(contPos.latitude,
+        contPos.longitude, tempworkerloc['lat'], tempworkerloc['lon']);
+
+    // int distance=
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -22,7 +29,7 @@ class WorkerTile extends ConsumerWidget {
                 color: Colors.grey.withOpacity(0.8),
                 spreadRadius: 5,
                 blurRadius: 12,
-                offset: Offset(0, 7), // changes position of shadow
+                offset: const Offset(0, 7), // changes position of shadow
               ),
             ],
             borderRadius: BorderRadius.circular(20),
@@ -38,7 +45,8 @@ class WorkerTile extends ConsumerWidget {
                   flex: 1,
                   child: Text(
                     src["name"],
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Flexible(
@@ -54,16 +62,15 @@ class WorkerTile extends ConsumerWidget {
                             children: [
                               Text(
                                 "Age : $age",
-                                style: TextStyle(fontSize: 18),
+                                style: const TextStyle(fontSize: 18),
                               ),
-                              const Text(
-                                "Distance : 20",
-                                // "Distance : ${src["exp"]}",
-                                style: TextStyle(fontSize: 18),
+                              Text(
+                                "Distance : ${workerDistance.toInt()} Km",
+                                style: const TextStyle(fontSize: 18),
                               ),
                               Text(
                                 "Exp : ${src["exp"]}",
-                                style: TextStyle(fontSize: 18),
+                                style: const TextStyle(fontSize: 18),
                               ),
                             ],
                           )),
@@ -81,7 +88,7 @@ class WorkerTile extends ConsumerWidget {
                                   .map(
                                     (val) => Text(
                                       val,
-                                      style: TextStyle(fontSize: 18),
+                                      style: const TextStyle(fontSize: 18),
                                     ),
                                   )
                                   .toList(),

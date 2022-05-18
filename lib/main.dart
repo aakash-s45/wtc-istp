@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wtc/ui/home.dart';
+import 'package:wtc/provider.dart';
+import 'package:wtc/ui/contractorHome.dart';
 import 'package:wtc/ui/login.dart';
 
 final authProvider = Provider((ref) => FirebaseAuth.instance);
@@ -27,6 +28,7 @@ class GetAuth extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final _authStream = ref.watch(authStateStream);
+    final contPosprovider = ref.read(currentPositionProvider.notifier).update();
     return Scaffold(
       body: Center(
         child: _authStream.when(

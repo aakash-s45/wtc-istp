@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wtc/dbcontent.dart';
-import 'package:wtc/ui/home.dart';
+import 'package:wtc/ui/contractorHome.dart';
 
 Future<void> loginWithPhone(
     {required BuildContext context,
@@ -25,14 +25,14 @@ Future<void> loginWithPhone(
                 userid: user.uid,
                 name: name,
                 phone: phone,
-                address: "",
+                address: {'lat': 0, 'lon': 0},
                 dob: dob);
           } else {
             await addContractor(
                 userid: user.uid,
                 name: name,
                 phone: phone,
-                address: "",
+                address: {'lat': 0, 'lon': 0},
                 dob: dob);
           }
         }
@@ -76,14 +76,14 @@ Future<void> loginWithPhone(
                               userid: user.uid,
                               name: name,
                               phone: phone,
-                              address: "",
+                              address: {'lat': 0, 'lon': 0},
                               dob: dob);
                         } else {
                           await addContractor(
                               userid: user.uid,
                               name: name,
                               phone: phone,
-                              address: "",
+                              address: {'lat': 0, 'lon': 0},
                               dob: dob);
                         }
                       }

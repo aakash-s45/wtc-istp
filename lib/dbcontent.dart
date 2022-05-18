@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 
 var collRef1 = FirebaseFirestore.instance.collection('/workers');
@@ -24,7 +26,7 @@ Future<void> addWorker(
     {required String userid,
     required String name,
     required String phone,
-    required String address,
+    required Map<String, double> address,
     required String dob}) {
   return collRef1
       .doc(userid)
@@ -34,7 +36,7 @@ Future<void> addWorker(
         'address': address,
         'dob': dob,
         'phone': phone,
-        'skill': "",
+        'skill': [],
         'exp': ""
       })
       .then((value) => print("Worker Added"))
@@ -45,7 +47,7 @@ Future<void> addContractor(
     {required String userid,
     required String name,
     required String phone,
-    required String address,
+    required Map<String, double> address,
     required String dob}) {
   return collRef2
       .doc(userid)
@@ -76,4 +78,19 @@ int isAdult(String birthDateString) {
           yearDiff == 18 && monthDiff == 0 && dayDiff >= 0)
       ? yearDiff
       : -1;
+}
+
+Future<void> updatelocation(Position currentloc) async {
+  var uid = FirebaseAuth.instance.currentUser!.uid;
+  collRef2.doc(uid).update({
+    "address": {'lat': currentloc.latitude, 'lon': currentloc.longitude}
+  });
+}
+
+double calculateDistance(double contractLat, double contractLong,
+    double workerLat, double workerLong) {
+  double distanceInMeters = Geolocator.distanceBetween(
+      contractLat, contractLong, workerLat, workerLong);
+  double distinkm = distanceInMeters / 1000;
+  return distinkm;
 }
