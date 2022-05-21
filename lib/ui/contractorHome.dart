@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:wtc/dbcontent.dart';
 import 'package:wtc/provider.dart';
+import 'package:wtc/ui/contrLocationDetail.dart';
 import 'package:wtc/ui/worker_list.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -55,7 +56,14 @@ class HomeScreen extends ConsumerWidget {
         ),
         body: SingleChildScrollView(
           child: WorkerList(),
-        ));
+        ),
+      floatingActionButton: FloatingActionButton(
+        child : Icon(Icons.add),
+        onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ContractorDetail() ));
+        },
+      ),
+    );
   }
 }
 
