@@ -1,14 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wtc/dbcontent.dart';
-import 'package:wtc/ui/contractorHome.dart';
+import 'package:wtc/provider.dart';
+import 'package:wtc/ui/home.dart';
 
 Future<void> loginWithPhone(
     {required BuildContext context,
     required String phone,
     String? name,
     String? dob,
-    String? usertype}) async {
+    String? usertype,
+    WidgetRef? ref}) async {
   TextEditingController otpCtrller = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -21,6 +24,7 @@ Future<void> loginWithPhone(
       if (user != null) {
         if (name != null && dob != null && usertype != null) {
           if (usertype == "Worker") {
+            await addUser(userid: user.uid, type: 'w');
             await addWorker(
                 userid: user.uid,
                 name: name,
@@ -28,6 +32,7 @@ Future<void> loginWithPhone(
                 address: {'lat': 0, 'lon': 0},
                 dob: dob);
           } else {
+            await addUser(userid: user.uid, type: 'c');
             await addContractor(
                 userid: user.uid,
                 name: name,
@@ -35,6 +40,11 @@ Future<void> loginWithPhone(
                 address: {'lat': 0, 'lon': 0},
                 dob: dob);
           }
+        } else {
+          if (ref != null) {
+            ref.read(userTypeFromFirebaseProvider.notifier).findType(user.uid);
+          }
+          // login
         }
         Navigator.pushAndRemoveUntil(
             context,
@@ -72,6 +82,7 @@ Future<void> loginWithPhone(
                     if (user != null) {
                       if (name != null && dob != null && usertype != null) {
                         if (usertype == "Worker") {
+                          await addUser(userid: user.uid, type: 'w');
                           await addWorker(
                               userid: user.uid,
                               name: name,
@@ -79,6 +90,7 @@ Future<void> loginWithPhone(
                               address: {'lat': 0, 'lon': 0},
                               dob: dob);
                         } else {
+                          await addUser(userid: user.uid, type: 'c');
                           await addContractor(
                               userid: user.uid,
                               name: name,
@@ -86,6 +98,13 @@ Future<void> loginWithPhone(
                               address: {'lat': 0, 'lon': 0},
                               dob: dob);
                         }
+                      } else {
+                        if (ref != null) {
+                          ref
+                              .read(userTypeFromFirebaseProvider.notifier)
+                              .findType(user.uid);
+                        }
+                        // login
                       }
 
                       Navigator.pushAndRemoveUntil(

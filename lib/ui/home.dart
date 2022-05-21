@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:wtc/dbcontent.dart';
 import 'package:wtc/provider.dart';
-import 'package:wtc/ui/contrLocationDetail.dart';
+import 'package:wtc/task.dart';
+import 'package:wtc/ui/task_input_form.dart';
+import 'package:wtc/ui/task_tile.dart';
 import 'package:wtc/ui/worker_list.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -19,13 +21,15 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     int distance = ref.watch(distanceDropdownoptionProvider);
     ref.read(currentPositionProvider.notifier).update();
-
+    final userType = ref.watch(userTypeFromFirebaseProvider);
+    print("userType $userType");
     return Scaffold(
-        key: _scaffoldKey,
-        drawer: Drawer(
-          backgroundColor: Colors.blueGrey,
-          child: SafeArea(
-            child: Column(children: [
+      key: _scaffoldKey,
+      drawer: Drawer(
+        backgroundColor: Colors.blueGrey,
+        child: SafeArea(
+          child: Column(
+            children: [
               const SizedBox(width: 300),
               ListTile(
                 onTap: () async {
@@ -34,35 +38,58 @@ class HomeScreen extends ConsumerWidget {
                 title: const Text("Logout"),
                 leading: const Icon(Icons.logout),
               ),
-            ]),
+              ListTile(
+                title: (userType == 'w') ? Text("Worker") : Text("Contractor"),
+                leading: const Icon(Icons.flag),
+              ),
+            ],
           ),
         ),
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              _scaffoldKey.currentState!.openDrawer();
-            },
-          ),
-          actions: [
-            Text("$distance Km"),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: DistWin(),
-            ),
-          ],
-          title: const Text("Worker List"),
-          backgroundColor: Colors.blueGrey,
-        ),
-        body: SingleChildScrollView(
-          child: WorkerList(),
-        ),
-      floatingActionButton: FloatingActionButton(
-        child : Icon(Icons.add),
-        onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ContractorDetail() ));
-        },
       ),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            _scaffoldKey.currentState!.openDrawer();
+          },
+        ),
+        actions: [
+          Text("$distance Km"),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: DistWin(),
+          ),
+        ],
+        title: (userType == 'c') ? Text("Worker List") : Text("Task List"),
+        backgroundColor: Colors.blueGrey,
+      ),
+      body: SingleChildScrollView(
+        child: (userType == 'w')
+            ? TaskTile(
+                task: Task(
+                    name: "Jeengar",
+                    startdate: "2022-05-02",
+                    enddate: "2022-05-02",
+                    dailywage: 10,
+                    location: "mandi",
+                    vacancy: 5,
+                    projectName: "Bohot tagda Project",
+                    accomodation: true,
+                    skills: "bohot jyada"),
+              )
+            : WorkerList(),
+      ),
+      floatingActionButton: (userType == 'c')
+          ? FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ContractorDetail()));
+              },
+            )
+          : null,
     );
   }
 }

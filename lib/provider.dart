@@ -23,6 +23,34 @@ final workerListStream = StreamProvider((ref) {
   var uid = FirebaseAuth.instance.currentUser!.uid;
   return collRef1.where("id", isNotEqualTo: uid).snapshots();
 });
+final contractorListStream = StreamProvider((ref) {
+  var uid = FirebaseAuth.instance.currentUser!.uid;
+  return collRef2.where("id", isNotEqualTo: uid).snapshots();
+});
+
+final userTypeFromFirebaseProvider =
+    StateNotifierProvider<Usertype, String>((ref) {
+  return Usertype();
+});
+
+class Usertype extends StateNotifier<String> {
+  Usertype() : super('');
+
+  void setType(String type) {
+    if (type == "Worker") {
+      state = 'w';
+    } else {
+      state = 'c';
+    }
+  }
+
+  Future<void> findType(String uid) async {
+    return await collRef3.doc(uid).get().then((snapshot) {
+      // print(snapshot['type']);
+      state = snapshot['type'];
+    });
+  }
+}
 
 final workerListProvider = StateNotifierProvider<WorkerListState, List>((ref) {
   return WorkerListState();
@@ -52,22 +80,3 @@ class CurrentLocation extends StateNotifier<Position> {
     state = await determinePosition();
   }
 }
-
-
-
-/*
-db
-    .collection("cities")
-    .where("state", isEqualTo: "CA")
-    .snapshots()
-    .listen((event) {
-  final cities = [];
-  for (var doc in event.docs) {
-    cities.add(doc.data()["name"]);
-  }
-  print("cities in CA: ${cities.join(", ")}");
-});
-firestore.dart
-
-
-*/ 

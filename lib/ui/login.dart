@@ -48,18 +48,16 @@ class Login extends ConsumerWidget {
                         await doesNameAlreadyExist(number).then(((value) async {
                           if (value == true) {
                             return await loginWithPhone(
-                                context: context, phone: number);
+                              context: context,
+                              phone: number,
+                              ref: ref,
+                            );
                           } else {
                             print("Moj kr");
-                            // return SnackBar(content: Text("Moj kr"));
                           }
                         }));
                       },
-                      child: Text("Continue"),
-                      //   style: ButtonStyle(
-                      //       // minimumSize:
-                      //       //     MaterialStateProperty.all(Size.square(70)),
-                      //       // shape: MaterialStateProperty.all(StadiumBorder())),
+                      child: const Text("Continue"),
                     ),
                   )
                 ],

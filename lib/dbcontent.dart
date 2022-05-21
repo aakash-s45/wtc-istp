@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 var collRef1 = FirebaseFirestore.instance.collection('/workers');
 var collRef2 = FirebaseFirestore.instance.collection('/contractors');
+var collRef3 = FirebaseFirestore.instance.collection('/users');
 
 Future<bool> doesNameAlreadyExistHelper(String phone, String coll) async {
   final QuerySnapshot result = await FirebaseFirestore.instance
@@ -61,6 +62,10 @@ Future<void> addContractor(
       })
       .then((value) => print("Contractor Added"))
       .catchError((error) => print("Failed to add user: $error"));
+}
+
+Future<void> addUser({required String userid, required String type}) {
+  return collRef3.doc(userid).set({'type': type});
 }
 
 int isAdult(String birthDateString) {

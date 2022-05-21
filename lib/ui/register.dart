@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wtc/authentication.dart';
 import 'package:wtc/dbcontent.dart';
+import 'package:wtc/provider.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -61,15 +63,11 @@ class _RegisterState extends State<Register> {
               TextFormField(
                 controller: phoneNum,
                 keyboardType: TextInputType.number,
-                // inputFormatters: <TextInputFormatter>[
-                //   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                // ],
                 decoration: const InputDecoration(
                   labelText: "Phone number",
                   hintText: "Phone number",
                   icon: Icon(Icons.phone_iphone),
                 ),
-
                 validator: (String? value) {
                   return (value != null && value.length < 10)
                       ? 'Invalid number'
@@ -80,9 +78,6 @@ class _RegisterState extends State<Register> {
               TextFormField(
                 controller: adharnum,
                 keyboardType: TextInputType.number,
-                // inputFormatters: <TextInputFormatter>[
-                //   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                // ],
                 decoration: const InputDecoration(
                     labelText: "Aadhar number",
                     hintText: "Aadhar number",
@@ -128,34 +123,39 @@ class _RegisterState extends State<Register> {
                 ],
               ),
               const SizedBox(height: 30),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.grey,
-                  onPrimary: Colors.white,
+              Consumer(
+                builder: (context, ref, child) => ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.grey,
+                    onPrimary: Colors.white,
+                  ),
+                  onPressed: () async {
+                    String number = phoneNum.text;
+                    number = "+91" + number;
+                    await doesNameAlreadyExist(number).then(((isExist) async {
+                      if (isExist == false) {
+                        ref
+                            .read(userTypeFromFirebaseProvider.notifier)
+                            .setType(usertype);
+                        await loginWithPhone(
+                                context: context,
+                                phone: number,
+                                name: username.text,
+                                dob: dob,
+                                usertype: usertype)
+                            .whenComplete(() {
+                          phoneNum.clear();
+                          username.clear();
+                          adharnum.clear();
+                        });
+                      } else {
+                        print("moj kr");
+                        return const SnackBar(content: Text("Moj kr"));
+                      }
+                    }));
+                  },
+                  child: const Text('Continue'),
                 ),
-                onPressed: () async {
-                  String number = phoneNum.text;
-                  number = "+91" + number;
-                  await doesNameAlreadyExist(number).then(((isExist) async {
-                    if (isExist == false) {
-                      await loginWithPhone(
-                              context: context,
-                              phone: number,
-                              name: username.text,
-                              dob: dob,
-                              usertype: usertype)
-                          .whenComplete(() {
-                        phoneNum.clear();
-                        username.clear();
-                        adharnum.clear();
-                      });
-                    } else {
-                      print("moj kr");
-                      return const SnackBar(content: Text("Moj kr"));
-                    }
-                  }));
-                },
-                child: const Text('Continue'),
               ),
             ],
           ),

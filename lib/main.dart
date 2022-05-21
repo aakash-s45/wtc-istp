@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wtc/provider.dart';
-import 'package:wtc/ui/contractorHome.dart';
+import 'package:wtc/ui/home.dart';
 import 'package:wtc/ui/login.dart';
 
 final authProvider = Provider((ref) => FirebaseAuth.instance);
@@ -36,6 +36,9 @@ class GetAuth extends ConsumerWidget {
             if (user == null) {
               return Login();
             } else {
+              ref
+                  .read(userTypeFromFirebaseProvider.notifier)
+                  .findType(user.uid);
               return HomeScreen(user: user);
             }
           },

@@ -41,6 +41,8 @@ dependencies:
   date_time_picker: ^2.1.0
   date_format: ^2.0.6
   geolocator: ^8.2.1
+  geocoding: ^2.0.4
+  conditional_questions: ^2.0.0
 
 dev_dependencies:
   flutter_test:
